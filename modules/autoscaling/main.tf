@@ -7,19 +7,19 @@ resource "aws_security_group" "lb_ec2_security_gp" {
   vpc_id      = var.vpc_id
 
   ingress {
-    description      = "TLS from VPC"
-    from_port        = 22 
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    description = "TLS from VPC"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   ingress {
-    description      = "TLS from VPC" #TODO: Fix description
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    description = "TLS from VPC" #TODO: Fix description
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -45,7 +45,7 @@ resource "aws_lb" "lb_app" {
   security_groups    = [aws_security_group.lb_ec2_security_gp.id]
   subnets            = [var.subnet_pub_1, var.subnet_pub_2]
 
-  
+
 
 
 }
@@ -57,7 +57,7 @@ resource "aws_lb_target_group" "target_group" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id
-  
+
 
   health_check {
     path = "/health.html"
@@ -87,7 +87,7 @@ resource "aws_lb_listener" "front_end" {
 # redering templte for launch conf
 
 data "template_file" "user_data" {
-  template = "${file("${path.module}/launch.sh")}"
+  template = file("${path.module}/launch.sh")
   vars = {
     endpoint = var.rds_endpoint
   }
@@ -97,7 +97,7 @@ data "aws_ami" "ubuntu" {
   most_recent = true
 
   filter {
-    name   = "name"
+    name = "name"
     #values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
@@ -111,11 +111,11 @@ resource "aws_launch_configuration" "as_conf" {
   name          = "web_launch_coff"
   image_id      = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
-  key_name = "awskeypair"
+  key_name      = "awskeypair"
 
   security_groups = ["${aws_security_group.lb_ec2_security_gp.id}"]
 
-  user_data = "${data.template_file.user_data.rendered}"
+  user_data = data.template_file.user_data.rendered
 
 }
 
@@ -134,12 +134,12 @@ resource "aws_autoscaling_group" "bar" {
   target_group_arns         = [aws_lb_target_group.target_group.arn]
 
 
-}   
+}
 
 
 data "aws_route53_zone" "selected" {
-  name         = "kardekari.xyz"
-  
+  name = "kardekari.xyz"
+
 }
 
 resource "aws_route53_record" "www" {
@@ -155,8 +155,8 @@ resource "aws_route53_record" "www" {
 }
 
 resource "aws_route53_record" "cname_route53_record" {
-  zone_id = "${data.aws_route53_zone.selected.zone_id}" # Replace with your zone ID
-  name    = "www.kardekari.xyz" # Replace with your subdomain, Note: not valid with "apex" domains, e.g. example.com
+  zone_id = data.aws_route53_zone.selected.zone_id # Replace with your zone ID
+  name    = "www.kardekari.xyz"                    # Replace with your subdomain, Note: not valid with "apex" domains, e.g. example.com
   type    = "CNAME"
   ttl     = "60"
   records = ["${aws_lb.lb_app.dns_name}"]
