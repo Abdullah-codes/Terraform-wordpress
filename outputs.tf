@@ -1,3 +1,7 @@
+output "load_balancer" {
+  value = module.autoscaling.load_balancer_dns
+}
+
 output "subnet_id" {
   value = module.vpc_networking.subnet_pub_1
 }
@@ -26,6 +30,7 @@ output "RDS_endpoint" {
 output "aws_route_53" {
   value = module.autoscaling.route_53
 }
+
 
 # output "launchfile1" {
 #   value = module.autoscaling.launchfile
