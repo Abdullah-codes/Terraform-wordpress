@@ -11,16 +11,16 @@ sudo apt install -y $packages
 
 
 echo "creating dbscript"
-echo "CREATE DATABASE wordpress;CREATE USER 'wpuser'@'10.0.%.%' IDENTIFIED BY '***REMOVED***';GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'10.0.%.%';FLUSH PRIVILEGES;" > dbscript
+echo "CREATE DATABASE wordpress;CREATE USER 'wpuser'@'10.0.%.%' IDENTIFIED BY 'yourpassword';GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'10.0.%.%';FLUSH PRIVILEGES;" > dbscript
 
 echo "creating databse in rds"
-RESULT_VARIABLE="$(mysql -h ${endpoint} -P 3306 -u admin -p***REMOVED*** -sse "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = 'wpuser')")"
+RESULT_VARIABLE="$(mysql -h ${endpoint} -P 3306 -u admin -pyourpassword -sse "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = 'wpuser')")"
 
 if [ "$RESULT_VARIABLE" = 1 ]; then
   echo "already exists"
 else
   echo "setting up wordpress rds instance"
-  mysql -h ${endpoint} -P 3306 -u admin -p***REMOVED*** < dbscript
+  mysql -h ${endpoint} -P 3306 -u admin -pyourpassword < dbscript
 fi
 
 
@@ -62,7 +62,7 @@ echo "creating config.php from the sample.php"
 sudo cp wp-config-sample.php wp-config.php
 
 
-sudo sed -i "s/database_name_here/wordpress/;s/username_here/wpuser/;s/password_here/***REMOVED***/;s/localhost/${endpoint}/" wp-config.php
+sudo sed -i "s/database_name_here/wordpress/;s/username_here/wpuser/;s/password_here/yourpassword/;s/localhost/${endpoint}/" wp-config.php
 
 
 
