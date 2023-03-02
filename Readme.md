@@ -19,14 +19,14 @@
 ![Alt text](/terraform-modules.jpg?raw=true "Optional Title")
 
 
-+ In the image above it shows main module wich has 4 files , so first is main.tf in wich we provide the provider[aws,azure,gcp] and the region as shown below.
++ In the image above it shows main module which has 4 files , so first is main.tf in which we provide the provider[aws,azure,gcp] and the region as shown below.
 
 ```terraform
 provider "aws" {
   region  = var.region
 }
 ```
-+ And then we difine modules in wich we will use sub modules as shown below
++ And then we difine modules in which we will use sub modules as shown below
 
 ``` terraform 
 module "vpc_networking" {
@@ -34,15 +34,15 @@ module "vpc_networking" {
     
 }
 ```
-In above example we used submodule[networking] in the main module we difined as "vpc_networking".  we use source to use module wich is in modules directory.
+In above example we used submodule[networking] in the main module we difined as "vpc_networking".  we use source to use module which is in modules directory.
 
-+ in variables.tf file we declare  all the variables wich we will use.
++ in variables.tf file we declare  all the variables which we will use.
 
 ```terraform
 variable "vpc_cidr_block" {}
 ```
 
-+ in outputs.tf we take output of resourse wich we wantto see.
++ in outputs.tf we take output of resourse which we wantto see.
 
 ```terrafrom
 output "subnet_id" {
@@ -50,7 +50,7 @@ output "subnet_id" {
 }
 ```
 
-+ in terraform.tfvars file we define variable value wich is finnaly used.
++ in terraform.tfvars file we define variable value which is finnaly used.
 
 ```terraform
 vpc_cidr_block = "10.0.0.0/16"
@@ -72,7 +72,7 @@ resource "aws_vpc" "module_vpc" {
 }
 ```
 
-in above example we create aws resources wich is VPC by giving it neccesary value wich required to create vpc.
+in above example we create aws resources which is VPC by giving it neccesary value which required to create vpc.
 
 + thus we create multiple submodules in our case we create autoscaling,networking and database modules and use them in Root module.
 
@@ -82,13 +82,13 @@ in above example we create aws resources wich is VPC by giving it neccesary valu
 
 + So first of all we create vpc in [aws] then we create tow subnets in different availability zones then we do all the networking stuff to connect the vpc to internet like routing and creating internet gatway and security groups for the ec2 and database.
 
-+ So when we create 2 subnets we create one private subnet and one public subnet so we can deploy ec2 instances wich will act as server in our case and the database in the private subnets for the security reason , beacuse we provide internet access to the public subnet and doesnt provide internet access to the private subnet.
++ So when we create 2 subnets we create one private subnet and one public subnet so we can deploy ec2 instances which will act as server in our case and the database in the private subnets for the security reason , beacuse we provide internet access to the public subnet and doesnt provide internet access to the private subnet.
 
-+ Then we will create load balancer so it will divide traffic to diffrent servers wich.
++ Then we will create load balancer so it will divide traffic to diffrent servers.
 
-+ after then we will create autosacling for high availability , wich will deploy the new servers when one goes down in case. 
++ after then we will create autosacling for high availability , which will deploy the new servers when one goes down in case. 
 
-+ To sum it up shortly we create 2 ec2 instances wich host our wordpress website and a load balancer wich distrubtes traffic between them 2 and a database(RDS) wich is connected to our servers (ec2).
++ To sum it up shortly we create 2 ec2 instances which host our wordpress website and a load balancer which distrubtes traffic between them 2 and a database(RDS) which is connected to our servers (ec2).
 
 
 # Application deployment 
