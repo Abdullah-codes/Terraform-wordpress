@@ -42,7 +42,7 @@ resource "aws_db_instance" "db_test" {
   instance_class = "db.t2.small"
   identifier = "newtestdb"
   username = "admin"
-  password = "***REMOVED***" # Use password/secret from environment variable
+  password = "yourpassword" # Use password/secret from environment variable
   publicly_accessible = false
   db_subnet_group_name = "${aws_db_subnet_group.db_subnet.name}"
   vpc_security_group_ids = ["${aws_security_group.database_security_gp.id}"]
